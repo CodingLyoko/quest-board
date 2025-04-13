@@ -10,26 +10,26 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="900.0" style="-fx-background-color: transparent;" stylesheets="@../css/quest_view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controllers.quests.QuestViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="901.0" prefWidth="900.0" style="-fx-background-color: transparent;" stylesheets="@../css/quest_view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controllers.quests.QuestViewController">
    <children>
-      <ImageView fitHeight="1000.0" fitWidth="900.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" style="fx-background-color: transparent;">
+      <ImageView fitHeight="900.0" fitWidth="900.0" layoutX="-1.0" layoutY="-1.0" nodeOrientation="INHERIT" pickOnBounds="true" style="fx-background-color: transparent;">
          <image>
             <Image url="@../images/Background_Quest_Board.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="47.0" fitWidth="39.0" layoutX="814.0" layoutY="62.0" onMouseClicked="#openPopup" onMouseEntered="#highlightOnMouseEntered" onMouseExited="#highlightOnMouseExit" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="47.0" fitWidth="39.0" layoutX="813.0" layoutY="55.0" onMouseClicked="#openPopup" onMouseEntered="#highlightOnMouseEntered" onMouseExited="#highlightOnMouseExit" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/settings_view_icon.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="47.0" fitWidth="39.0" layoutX="430.0" layoutY="48.0" onMouseClicked="#closeWindowOnClick" onMouseEntered="#highlightOnMouseEntered" onMouseExited="#highlightOnMouseExit" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="47.0" fitWidth="39.0" layoutX="430.0" layoutY="41.0" onMouseClicked="#closeWindowOnClick" onMouseEntered="#highlightOnMouseEntered" onMouseExited="#highlightOnMouseExit" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/CloseButton_icon.png" />
          </image>
       </ImageView>
-      <TabPane fx:id="questTabPane" layoutX="148.0" layoutY="193.0" prefHeight="648.0" prefWidth="250.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" />
-      <Button layoutX="148.0" layoutY="849.0" mnemonicParsing="false" onAction="#addQuest" prefHeight="33.0" prefWidth="43.0" text="+" />
-      <Button layoutX="226.0" layoutY="849.0" mnemonicParsing="false" onAction="#editQuest">
+      <TabPane fx:id="questTabPane" layoutX="148.0" layoutY="218.0" prefHeight="254.0" prefWidth="597.0" tabClosingPolicy="UNAVAILABLE" />
+      <Button layoutX="214.0" layoutY="179.0" mnemonicParsing="false" onAction="#addQuest" prefHeight="33.0" prefWidth="43.0" text="+" />
+      <Button layoutX="287.0" layoutY="179.0" mnemonicParsing="false" onAction="#editQuest">
          <graphic>
             <ImageView fitHeight="49.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -38,7 +38,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <Button layoutX="303.0" layoutY="849.0" mnemonicParsing="false" onAction="#deleteQuest" prefHeight="33.0" prefWidth="43.0">
+      <Button layoutX="358.0" layoutY="179.0" mnemonicParsing="false" onAction="#deleteQuest" prefHeight="33.0" prefWidth="43.0">
          <graphic>
             <ImageView fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -46,7 +46,7 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <VBox alignment="CENTER" layoutX="407.0" layoutY="193.0" minHeight="648.0" minWidth="100.0" prefHeight="648.0" prefWidth="344.0" spacing="10.0" stylesheets="@../css/quest_view.css">
+      <VBox alignment="CENTER" layoutX="154.0" layoutY="487.0" minHeight="254.0" minWidth="100.0" prefHeight="328.0" prefWidth="597.0" spacing="10.0" stylesheets="@../css/quest_view.css">
          <children>
             <Text fx:id="questNameText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-text-alignment: center;" textAlignment="CENTER" underline="true" wrappingWidth="382.0">
                <font>

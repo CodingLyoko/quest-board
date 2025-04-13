@@ -83,7 +83,7 @@ public class QuestViewController extends FXMLControllerTemplate {
 
             // Configures the text for the Tab
             Text tabText = new Text();
-            tabText.setWrappingWidth(100);
+            tabText.setWrappingWidth(80);
             tabText.setTextAlignment(TextAlignment.CENTER);
 
             if (!timeframeString.equals(DueDateTimeframe.RECURRING.toString())) {
@@ -92,7 +92,6 @@ public class QuestViewController extends FXMLControllerTemplate {
                 tabText.setText(timeframeString.toUpperCase());
             }
             tab.setGraphic(tabText);
-            questTabPane.rotateProperty();
 
             // Associates the Tab with the relevant ListView
             tab.setContent(listView);
