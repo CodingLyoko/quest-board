@@ -56,8 +56,6 @@ public class ServiceTemplate {
 
         String tableName = convertStringToSQLSyntax(clazz.getSimpleName());
 
-        System.out.println("\n\n\n\n\nTable Name: " + tableName + "\n\n\n\n");
-
         // The name of the Class should be the same as the name of the Database table
         ResultSet resultSet = getQueryResults("SELECT * FROM " + tableName);
 
@@ -308,12 +306,12 @@ public class ServiceTemplate {
                     // Strings, Enums, UUIDs
                 } else if (attributeValue.getClass().equals(String.class) || attributeValue.getClass().isEnum()
                         || attributeValue.getClass().equals(UUID.class)) {
-                    sqlQuery.append("'" + attributeValue + "'");
+                    sqlQuery.append("'" + cleanInputString(attributeValue.toString()) + "'");
                     // Timestamps
                 } else if (attributeValue.getClass().equals(Timestamp.class)) {
                     sqlQuery.append(formatTimestamp((Timestamp) attributeValue));
                 } else {
-                    sqlQuery.append(attributeValue);
+                    sqlQuery.append(cleanInputString(attributeValue.toString()));
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -554,5 +552,16 @@ public class ServiceTemplate {
     protected void closeDatabaseConnections() throws SQLException {
         connection.close();
         statement.close();
+    }
+
+    /**
+     * Formats a String so that it can be used in an SQL statement (e.g., allow the
+     * ' character)
+     * 
+     * @param inputString - the String to be formatted
+     * @return - String that can be used in an SQL statement
+     */
+    private String cleanInputString(String inputString) {
+        return inputString.replace("'", "''");
     }
 }
