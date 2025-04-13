@@ -26,15 +26,20 @@ public class InitTask extends Task<Void> {
     protected Void call() throws Exception {
         Logger.info("\n#################### STARTING APPLICATION ####################\n");
 
-        PlayerHandler.getPlayerInstance();
-        updateProgress(1, TOTAL_NUM_TASKS);
+        try {
+            PlayerHandler.getPlayerInstance();
+            updateProgress(1, TOTAL_NUM_TASKS);
 
-        initFXML();
+            initFXML();
 
-        // Allows the User to see the progress bar at 100%
-        Thread.sleep(500);
+            // Allows the User to see the progress bar at 100%
+            Thread.sleep(500);
 
-        return null; // success
+            return null; // success
+        } catch (Exception e) {
+            Logger.error(e);
+            throw e;
+        }
     }
 
     /**
