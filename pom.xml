@@ -14,7 +14,7 @@
         <openJFXVersion>25-ea+11</openJFXVersion>
         <lombokVersion>1.18.38</lombokVersion>
         <h2Version>2.3.232</h2Version>
-        <tinylogVersion>2.7.0</tinylogVersion>
+        <tinylogVersion>2.8.0-M1</tinylogVersion>
     </properties>
 
     <dependencies>
