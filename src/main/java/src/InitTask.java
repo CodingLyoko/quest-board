@@ -61,7 +61,6 @@ public class InitTask extends Task<Void> {
      *                     FXMLInstance
      * @throws IOException
      */
-    @SuppressWarnings("exports")
     public void addFXMLInstance(FXMLFilenames fxmlFilename) throws IOException {
         // Only create an FXMLInstance if it does not already exist
         if (!FXMLHandler.getFxmlInstances().containsKey(fxmlFilename)) {

@@ -14,12 +14,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import src.backend.controller.QuestController;
 import src.backend.model.Quest;
 import src.controllers.FXMLControllerTemplate;
@@ -73,7 +73,7 @@ public class QuestViewController extends FXMLControllerTemplate {
             // Configures the ListView for the associated ObservableList
             ListView<Quest> listView = new ListView<>();
             listView.getItems().setAll(observableList);
-            listView.setOnMouseClicked(e -> questItemOnClick());
+            listView.setOnMouseClicked(_ -> questItemOnClick());
 
             // Stores the ObservableList in a Map (so Quest objects can be retrieved)
             questLists.put(timeframeString, listView);
@@ -82,11 +82,14 @@ public class QuestViewController extends FXMLControllerTemplate {
             tab.setId(timeframeString);
 
             // Configures the text for the Tab
-            Label tabText;
+            Text tabText = new Text();
+            tabText.setWrappingWidth(100);
+            tabText.setTextAlignment(TextAlignment.CENTER);
+
             if (!timeframeString.equals(DueDateTimeframe.RECURRING.toString())) {
-                tabText = new Label("Due Within A " + timeframeString.toUpperCase());
+                tabText.setText("Due Within A " + timeframeString.toUpperCase());
             } else {
-                tabText = new Label(timeframeString.toUpperCase());
+                tabText.setText(timeframeString.toUpperCase());
             }
             tab.setGraphic(tabText);
             questTabPane.rotateProperty();

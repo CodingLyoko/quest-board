@@ -32,8 +32,8 @@ public class App extends Application {
 
         var task = new InitTask();
 
-        task.setOnSucceeded(e -> WindowHandler.initWindows(stage));
-        task.setOnFailed(e -> {
+        task.setOnSucceeded(_ -> WindowHandler.initWindows(stage));
+        task.setOnFailed(_ -> {
             var alert = new Alert(AlertType.WARNING);
             alert.initOwner(stage);
             alert.setTitle("ERROR");

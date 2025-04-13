@@ -1,7 +1,7 @@
 package src.handlers;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 import javafx.fxml.FXMLLoader;
@@ -16,7 +16,7 @@ import src.shared.FXMLFilenames;
 public class FXMLHandler {
 
     @Getter
-    private static Map<FXMLFilenames, FXMLInstance> fxmlInstances = new HashMap<>();
+    private static Map<FXMLFilenames, FXMLInstance> fxmlInstances = new EnumMap<>(FXMLFilenames.class);
 
     @Getter
     private static final FXMLFilenames[] FXML_FILENAMES = FXMLFilenames.values();

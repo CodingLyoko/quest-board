@@ -11,8 +11,8 @@ import src.shared.FXMLFilenames;
 public class WindowHandler {
 
     private static Scene mainScene;
-    private static final int MAIN_WINDOW_WIDTH = 1478;
-    private static final int MAIN_WINDOW_HEIGHT = 740;
+    private static final int MAIN_WINDOW_WIDTH = 900;
+    private static final int MAIN_WINDOW_HEIGHT = 1000;
 
     private static Scene popupScene;
     private static Stage popupStage = new Stage();
@@ -50,19 +50,7 @@ public class WindowHandler {
         popupStage.setScene(popupScene);
 
         makeWindowDraggable(popupScene, popupStage);
-
-        // Alert Window
-        alertScene = new Scene(FXMLHandler.getFxmlInstances().get(FXMLFilenames.SETTINGS_VIEW).root); // Default Scene
-        alertScene.setFill(Color.TRANSPARENT);
-        alertScene.getStylesheets().add(WindowHandler.class.getResource("/css/application.css").toExternalForm());
-
-        alertStage.initOwner(mainStage); // Sets the Main Window as the Owner of this Stage
-        alertStage.initModality(Modality.APPLICATION_MODAL); // Disables other windows while this one is open
-        alertStage.initStyle(StageStyle.TRANSPARENT);
-        alertStage.setScene(alertScene);
-
-        makeWindowDraggable(alertScene, alertStage);
-
+        
         mainStage.centerOnScreen();
     }
 
