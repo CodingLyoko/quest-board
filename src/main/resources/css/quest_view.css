@@ -33,3 +33,9 @@
     -fx-pref-width: 100;
     -fx-pref-height: 50;
 }
+
+/*====================PROGRESS BAR====================*/
+.progress-bar .bar {
+    -fx-background-color: 'YELLOWGREEN';
+    background-color: 'YELLOWGREEN';
+}

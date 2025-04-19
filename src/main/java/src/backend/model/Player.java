@@ -13,11 +13,8 @@ import lombok.Setter;
 public final class Player extends ModelTemplate {
 
     public Player() {
-        this.maxHealthPoints = 100;
-        this.currentHealthPoints = 100;
-        this.maxActionPoints = 10;
-        this.currentActionPoints = 10;
         this.experiencePoints = 0;
+        this.expToNextLevel = 100;
     }
 
     public Player(ResultSet resultSet) {
@@ -25,14 +22,6 @@ public final class Player extends ModelTemplate {
     }
 
     private UUID id;
-    private int maxHealthPoints;
-    private int currentHealthPoints;
-    private int maxActionPoints;
-    private int currentActionPoints;
     private int experiencePoints;
-
-    @Override
-    public String toString() {
-        return "HP: " + this.currentHealthPoints + "\nAP: " + this.currentActionPoints + "\nEXP: " + this.experiencePoints;
-    }
+    private int expToNextLevel;
 }

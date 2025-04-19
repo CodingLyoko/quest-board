@@ -15,6 +15,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
@@ -46,16 +47,25 @@ public class QuestViewController extends FXMLControllerTemplate {
     @FXML
     private TextArea questDescriptionTextArea;
     @FXML
-    private Text expText;
-    @FXML
     private Text dueDateText;
     @FXML
+    private Text occurrenceTypeText;
+    @FXML
+    private Text expText;
+    @FXML
     private Button completeQuestButton;
+
+    @FXML
+    private ProgressBar expBar;
+    @FXML
+    private Text expBarText;
 
     @FXML
     public void initialize() {
         populateTabPanes();
         populateListViews();
+        
+        updateExpBar();
     }
 
     /**
@@ -165,8 +175,8 @@ public class QuestViewController extends FXMLControllerTemplate {
         if (selectedQuest != null) {
             questNameText.setText(selectedQuest.getQuestName());
             questDescriptionTextArea.setText(selectedQuest.getQuestDescription());
-            expText.setText("EXP: " + selectedQuest.getExperiencePoints());
 
+            // Due Date Text Logic
             if (selectedQuest.getDueDate() != null) {
                 String dueDateString = selectedQuest.getDueDate().toString();
                 dueDateText.setText("Due Date: "
@@ -174,6 +184,14 @@ public class QuestViewController extends FXMLControllerTemplate {
             } else {
                 dueDateText.setText("Due Date: N/A");
             }
+
+            // Occurrence Type Text Logic
+            if (selectedQuest.getOccurrenceType() != null) {
+                String occurrenceTypeString = selectedQuest.getOccurrenceType().toString();
+                occurrenceTypeText.setText("Occurrence Type: " + occurrenceTypeString);
+            }
+
+            expText.setText("EXP: " + selectedQuest.getExperiencePoints());
 
             completeQuestButton.setVisible(true);
         }
@@ -246,6 +264,8 @@ public class QuestViewController extends FXMLControllerTemplate {
             }
         }
 
+        updateExpBar();
+
         clearQuestDisplay();
     }
 
@@ -272,9 +292,16 @@ public class QuestViewController extends FXMLControllerTemplate {
     private void clearQuestDisplay() {
         questNameText.setText("");
         questDescriptionTextArea.setText("");
-        expText.setText("");
         dueDateText.setText("");
+        occurrenceTypeText.setText("");
+        expText.setText("");
         completeQuestButton.setVisible(false);
+    }
+
+    private void updateExpBar() {
+        expBar.setProgress(PlayerHandler.getProgressToNextLevel());
+        expBarText.setText("EXP: " + PlayerHandler.getPlayerInstance().getExperiencePoints() + " / "
+                + PlayerHandler.getPlayerInstance().getExpToNextLevel());
     }
 
     public static Map<String, ListView<Quest>> getQuestLists() {

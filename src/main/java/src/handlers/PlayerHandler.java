@@ -23,35 +23,19 @@ public final class PlayerHandler {
 
     public static void gainExp(int expToGain) {
         playerInstance.setExperiencePoints(playerInstance.getExperiencePoints() + expToGain);
+        
+        if (playerInstance.getExperiencePoints() >= playerInstance.getExpToNextLevel()) {
+            playerInstance.setExperiencePoints(playerInstance.getExperiencePoints() % playerInstance.getExpToNextLevel());
+        }
+
         Logger.info("Successfully granted " + expToGain + " Experience Points to the Player.");
 
         updatePlayer();
     }
 
-    /**
-     * Subtract from the current Action Points available
-     * 
-     * @param actionPointsToLose - the amount of Action Points to lose
-     * @return true if there are enough Action Points to perform the action;
-     *         false otherwise
-     */
-    /*public static Boolean expendActionPoints(int actionPointsToLose) {
-
-        // Checks if there are enough Action Points to perform the action
-        if (playerInstance.getCurrentActionPoints() >= actionPointsToLose) {
-            playerInstance.setCurrentActionPoints(playerInstance.getCurrentActionPoints() - actionPointsToLose);
-            Logger.info("Successfully subtracted " + actionPointsToLose + " Action Points from the Player.");
-
-            updatePlayer();
-        } else {
-            Logger.warn("Insufficient Action Points to perform action.");
-            WindowHandler.showAlertPopup(FXMLFilenames.INSUFFICIENT_ACTION_POINTS);
-
-            return false;
-        }
-
-        return true;
-    }*/
+    public static double getProgressToNextLevel() {
+        return ((double) playerInstance.getExperiencePoints() / playerInstance.getExpToNextLevel());
+    }
 
     /**
      * Call this method whenever a change made to the Player should persist after
