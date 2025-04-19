@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
@@ -49,13 +50,16 @@ public class AddQuestController extends FXMLControllerTemplate {
     private DatePicker dueDateInput;
 
     @FXML
+    private CheckBox checkboxTodo;
+
+    @FXML
     public void initialize() {
 
         restrictInputFields();
 
         // Sets the values for the Occurrence Type input
         for (OccurrenceType occurrenceType : OccurrenceType.class.getEnumConstants()) {
-            occurrenceTypeValues.add(occurrenceType);
+            occurrenceTypeValues.addAll(occurrenceType);
         }
         occurrenceTypeInput.setItems(occurrenceTypeValues);
     }
@@ -117,7 +121,7 @@ public class AddQuestController extends FXMLControllerTemplate {
 
     /**
      * Sets the values of the created/edited Quest with the values from the input
-     * fields. This function also determines which ListView the Quest will go into.
+     * fields.
      * 
      * @param quest - the Quest being created/edited
      */
@@ -152,19 +156,37 @@ public class AddQuestController extends FXMLControllerTemplate {
             quest.setOccurrenceType(occurrenceTypeInput.getValue());
         }
 
-        // If a Due Date was selected, set that value for the Quest
-        if (dueDateInput.getValue() != null) {
-            // Converts the DatePicker value to a Timestamp
-            quest.setDueDate(Timestamp.valueOf(dueDateInput.getValue().atStartOfDay()));
+        quest.setTodo(checkboxTodo.isSelected());
 
-            addQuestToListView(quest);
-        } else if (occurrenceTypeInput.getValue() != null
-                && occurrenceTypeInput.getValue() != OccurrenceType.RECURRING) {
-            quest.setDueDate(Timestamp.from(Instant.now()));
-            QuestViewController.getQuestLists().get(DueDateTimeframe.DAY.toString()).getItems().add(quest);
+        determineQuestList(quest);
+    }
+
+    /**
+     * Determines which ListView the designated Quest will go into.
+     * 
+     * @param quest - the Quest being placed into a List
+     */
+    private void determineQuestList(Quest quest) {
+
+        // If To-do is marked, place the Quest in the To-do List
+        // Else, deermine which List it belongs based on OccurrenceType
+        if (quest.getTodo() == Boolean.TRUE) {
+            QuestViewController.getQuestLists().get("TODO").getItems().add(quest);
         } else {
-            quest.setDueDate(null);
-            QuestViewController.getQuestLists().get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
+            // If a Due Date was selected, set that value for the Quest
+            if (dueDateInput.getValue() != null) {
+                // Converts the DatePicker value to a Timestamp
+                quest.setDueDate(Timestamp.valueOf(dueDateInput.getValue().atStartOfDay()));
+
+                addQuestToListView(quest);
+            } else if (occurrenceTypeInput.getValue() != null
+                    && occurrenceTypeInput.getValue() != OccurrenceType.RECURRING) {
+                quest.setDueDate(Timestamp.from(Instant.now()));
+                QuestViewController.getQuestLists().get(DueDateTimeframe.DAY.toString()).getItems().add(quest);
+            } else {
+                quest.setDueDate(null);
+                QuestViewController.getQuestLists().get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
+            }
         }
     }
 
@@ -205,6 +227,7 @@ public class AddQuestController extends FXMLControllerTemplate {
         experiencePointsInput.setText("");
         occurrenceTypeInput.valueProperty().set(null);
         dueDateInput.valueProperty().set(null);
+        checkboxTodo.setSelected(false);
     }
 
     /**
@@ -226,6 +249,8 @@ public class AddQuestController extends FXMLControllerTemplate {
         } else {
             dueDateInput.valueProperty().set(LocalDate.from(quest.getDueDate().toLocalDateTime()));
         }
+
+        checkboxTodo.setSelected(quest.getTodo());
     }
 
     public static Boolean cancelWasClicked() {

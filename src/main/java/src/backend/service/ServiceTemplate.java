@@ -306,12 +306,12 @@ public class ServiceTemplate {
                     // Strings, Enums, UUIDs
                 } else if (attributeValue.getClass().equals(String.class) || attributeValue.getClass().isEnum()
                         || attributeValue.getClass().equals(UUID.class)) {
-                    sqlQuery.append("'" + cleanInputString(attributeValue.toString()) + "'");
+                    sqlQuery.append("'" + sanitizeInputString(attributeValue.toString()) + "'");
                     // Timestamps
                 } else if (attributeValue.getClass().equals(Timestamp.class)) {
                     sqlQuery.append(formatTimestamp((Timestamp) attributeValue));
                 } else {
-                    sqlQuery.append(cleanInputString(attributeValue.toString()));
+                    sqlQuery.append(sanitizeInputString(attributeValue.toString()));
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 e.printStackTrace();
@@ -360,12 +360,12 @@ public class ServiceTemplate {
                     // Strings, Enums, UUIDs
                 } else if (attributeValue.getClass().equals(String.class) || attributeValue.getClass().isEnum()
                         || attributeValue.getClass().equals(UUID.class)) {
-                    sqlQuery.append("'" + attributeValue + "'");
+                    sqlQuery.append("'" + sanitizeInputString(attributeValue.toString()) + "'");
                     // Timestamps
                 } else if (attributeValue.getClass().equals(Timestamp.class)) {
                     sqlQuery.append(formatTimestamp((Timestamp) attributeValue));
                 } else {
-                    sqlQuery.append(attributeValue);
+                    sqlQuery.append(sanitizeInputString(attributeValue.toString()));
                 }
 
                 // If the current attribute is the ID, save this value
@@ -561,7 +561,7 @@ public class ServiceTemplate {
      * @param inputString - the String to be formatted
      * @return - String that can be used in an SQL statement
      */
-    private String cleanInputString(String inputString) {
+    private String sanitizeInputString(String inputString) {
         return inputString.replace("'", "''");
     }
 }

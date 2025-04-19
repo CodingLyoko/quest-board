@@ -62,42 +62,56 @@ public class QuestViewController extends FXMLControllerTemplate {
      * Creates a Tab, ListView, and ObservableList for each DueDateTimefram value.
      */
     private void populateTabPanes() {
+
+        createQuestListTab("TODO");
+
         // Create Tab, ObservableList and ListView for each Due Date type
         for (DueDateTimeframe dueDateTimeframe : DueDateTimeframe.values()) {
-
             String timeframeString = dueDateTimeframe.toString();
-
-            // Creates a List to hold the Quests for the associated Tab
-            ObservableList<Quest> observableList = FXCollections.observableArrayList();
-
-            // Configures the ListView for the associated ObservableList
-            ListView<Quest> listView = new ListView<>();
-            listView.getItems().setAll(observableList);
-            listView.setOnMouseClicked(_ -> questItemOnClick());
-
-            // Stores the ObservableList in a Map (so Quest objects can be retrieved)
-            questLists.put(timeframeString, listView);
-
-            Tab tab = new Tab();
-            tab.setId(timeframeString);
-
-            // Configures the text for the Tab
-            Text tabText = new Text();
-            tabText.setWrappingWidth(80);
-            tabText.setTextAlignment(TextAlignment.CENTER);
-
-            if (!timeframeString.equals(DueDateTimeframe.RECURRING.toString())) {
-                tabText.setText("Due Within A " + timeframeString.toUpperCase());
-            } else {
-                tabText.setText(timeframeString.toUpperCase());
-            }
-            tab.setGraphic(tabText);
-
-            // Associates the Tab with the relevant ListView
-            tab.setContent(listView);
-
-            questTabPane.getTabs().add(tab);
+            createQuestListTab(timeframeString);
         }
+    }
+
+    /**
+     * Creates a Tab for the different Quest categories
+     * 
+     * @param tabHeaderText - the initial text to use for the Tab
+     */
+    private void createQuestListTab(String tabHeaderText) {
+        // Creates a List to hold the Quests for the associated Tab
+        ObservableList<Quest> observableList = FXCollections.observableArrayList();
+
+        // Configures the ListView for the associated ObservableList
+        ListView<Quest> listView = new ListView<>();
+        listView.getItems().setAll(observableList);
+        listView.setOnMouseClicked(_ -> questItemOnClick());
+
+        // Stores the ObservableList in a Map (so Quest objects can be retrieved)
+        questLists.put(tabHeaderText, listView);
+
+        Tab tab = new Tab();
+        tab.setId(tabHeaderText);
+
+        // Configures the text for the Tab
+        Text tabText = new Text();
+        tabText.setWrappingWidth(80);
+        tabText.setTextAlignment(TextAlignment.CENTER);
+
+        // Determines what text should be displayed
+        if (DueDateTimeframe.contains(tabHeaderText) == Boolean.TRUE
+                && !tabHeaderText.equals(DueDateTimeframe.RECURRING.toString())) {
+            tabText.setText("Due Within A " + tabHeaderText.toUpperCase());
+        } else {
+            tabText.setText(tabHeaderText.toUpperCase());
+        }
+
+        // Sets the text for the Tab
+        tab.setGraphic(tabText);
+
+        // Associates the Tab with the relevant ListView
+        tab.setContent(listView);
+
+        questTabPane.getTabs().add(tab);
     }
 
     /**
@@ -113,26 +127,32 @@ public class QuestViewController extends FXMLControllerTemplate {
     }
 
     private void addQuestToListView(Quest quest) {
-        // Don't want to do Due Date calculations for Quests with the RECURRING
-        // Occurrence Type (since they do not have Due Dates)
-        List<DueDateTimeframe> dueDateTimeframes = new ArrayList<>(Arrays.asList(DueDateTimeframe.values()));
-        dueDateTimeframes.remove(DueDateTimeframe.RECURRING);
 
-        if (quest.getDueDate() != null) {
-            // Due Date minus the Current Date
-            int daysUntilDueDate = Math
-                    .toIntExact(ChronoUnit.DAYS.between(Instant.now(), quest.getDueDate().toInstant())) + 1;
-
-            // Adds a Quest to a ListView based on distance of Due Date from the Current
-            // Date
-            for (DueDateTimeframe dueDateTimeframe : dueDateTimeframes) {
-                if (daysUntilDueDate <= dueDateTimeframe.toInt()) {
-                    questLists.get(dueDateTimeframe.toString()).getItems().add(quest);
-                    break;
-                }
-            }
+        if (quest.getTodo() == Boolean.TRUE) {
+            questLists.get("TODO").getItems().add(quest);
         } else {
-            questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
+
+            // Don't want to do Due Date calculations for Quests with the RECURRING
+            // Occurrence Type (since they do not have Due Dates)
+            List<DueDateTimeframe> dueDateTimeframes = new ArrayList<>(Arrays.asList(DueDateTimeframe.values()));
+            dueDateTimeframes.remove(DueDateTimeframe.RECURRING);
+
+            if (quest.getDueDate() != null) {
+                // Due Date minus the Current Date
+                int daysUntilDueDate = Math
+                        .toIntExact(ChronoUnit.DAYS.between(Instant.now(), quest.getDueDate().toInstant())) + 1;
+
+                // Adds a Quest to a ListView based on distance of Due Date from the Current
+                // Date
+                for (DueDateTimeframe dueDateTimeframe : dueDateTimeframes) {
+                    if (daysUntilDueDate <= dueDateTimeframe.toInt()) {
+                        questLists.get(dueDateTimeframe.toString()).getItems().add(quest);
+                        break;
+                    }
+                }
+            } else {
+                questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
+            }
         }
     }
 
@@ -219,6 +239,9 @@ public class QuestViewController extends FXMLControllerTemplate {
             if (completedQuest.getOccurrenceType().equals(OccurrenceType.ONCE)) {
                 questController.deleteEntry(completedQuest);
             } else {
+                // If the Quest was marked as To-do, un-mark it
+                completedQuest.setTodo(false);
+
                 updateDueDate(completedQuest);
             }
         }

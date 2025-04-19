@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextArea?>
@@ -55,5 +56,11 @@
       <ComboBox fx:id="occurrenceTypeInput" layoutX="363.0" layoutY="325.0" onAction="#occurrenceTypeOnChange" prefHeight="26.0" prefWidth="162.0" />
       <TextArea fx:id="questDescriptionInput" layoutX="94.0" layoutY="143.0" prefHeight="122.0" prefWidth="697.0" wrapText="true" />
       <DatePicker fx:id="dueDateInput" layoutX="363.0" layoutY="375.0" prefHeight="26.0" prefWidth="162.0" />
+      <Text layoutX="629.0" layoutY="347.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TODO?">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <CheckBox fx:id="checkboxTodo" layoutX="659.0" layoutY="366.0" mnemonicParsing="false" />
    </children>
 </AnchorPane>

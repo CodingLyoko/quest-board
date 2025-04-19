@@ -27,6 +27,7 @@ public class Quest extends ModelTemplate {
     private OccurrenceType occurrenceType;
     private Timestamp dueDate;
     private int experiencePoints;
+    private Boolean todo;
     // private List<Object(?)> rewards;
 
     @Override
