@@ -4,6 +4,7 @@ import org.tinylog.Logger;
 
 import src.backend.controller.PlayerController;
 import src.backend.model.Player;
+import src.shared.SoundFiles;
 
 public final class PlayerHandler {
 
@@ -26,6 +27,7 @@ public final class PlayerHandler {
         
         if (playerInstance.getExperiencePoints() >= playerInstance.getExpToNextLevel()) {
             playerInstance.setExperiencePoints(playerInstance.getExperiencePoints() % playerInstance.getExpToNextLevel());
+            SoundHandler.playSound(SoundFiles.LEVEL_UP_EFFECT);
         }
 
         Logger.info("Successfully granted " + expToGain + " Experience Points to the Player.");
