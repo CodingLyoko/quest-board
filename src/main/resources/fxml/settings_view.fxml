@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="687.0" style="-fx-background-color: transparent;" stylesheets="@../css/quest_view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controllers.SettingsViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="740.0" prefWidth="687.0" style="-fx-background-color: transparent;" stylesheets="@../css/quest_view.css" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controllers.SettingsViewController">
    <children>
       <ImageView fitHeight="746.0" fitWidth="694.0" layoutX="-7.0" layoutY="-3.0" pickOnBounds="true">
          <image>
@@ -16,5 +19,11 @@
             <Image url="@../images/CloseButton_icon.png" />
          </image>
       </ImageView>
+      <Label layoutX="64.0" layoutY="80.0" text="Sound Effect Volume">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Slider fx:id="soundEffectSlider" blockIncrement="0.01" layoutX="64.0" layoutY="111.0" majorTickUnit="0.25" max="1.0" prefHeight="16.0" prefWidth="186.0" showTickMarks="true" value="0.75" />
    </children>
 </AnchorPane>

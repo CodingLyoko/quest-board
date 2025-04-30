@@ -19,7 +19,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException, SQLException {
 
         // Uncomment when a new DB needs to be generated
-        ConnectH2.initDatabase();
+        //ConnectH2.initDatabase();
 
         PlayerHandler.getPlayerInstance();
         initFXML();

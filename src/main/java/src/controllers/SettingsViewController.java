@@ -1,12 +1,16 @@
 package src.controllers;
 
 import javafx.fxml.FXML;
-
-import java.sql.SQLException;
+import javafx.scene.control.Slider;
+import src.handlers.SoundHandler;
 
 public class SettingsViewController extends FXMLControllerTemplate {
 
     @FXML
-    public void initialize() throws SQLException {
+    private Slider soundEffectSlider;
+
+    @FXML
+    public void initialize() {
+        soundEffectSlider.valueProperty().addListener((_, _, newValue) -> SoundHandler.setSoundEffectVolume(newValue.doubleValue()));
     }
 }
