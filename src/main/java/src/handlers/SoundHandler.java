@@ -1,6 +1,6 @@
 package src.handlers;
 
-import java.io.File;
+import java.net.URISyntaxException;
 
 import org.tinylog.Logger;
 
@@ -10,20 +10,31 @@ import src.shared.SoundFiles;
 
 public final class SoundHandler {
 
-    private static final String FILE_PATH = "src/main/resources/sounds/";
+    private static String FILE_PATH;
     private static final double DEFAULT_VOLUME_LEVEL = 0.75;
 
-    // Default sound; breaks if set to null
-    private static Media soundEffect = new Media(
-            new File(FILE_PATH + SoundFiles.LEVEL_UP_EFFECT.toString()).toURI().toString());
+    // Default sound effect
+    private static Media soundEffect;
 
     // Used to play audio for sound effects
-    private static MediaPlayer soundEffectPlayer = new MediaPlayer(soundEffect);
+    private static MediaPlayer soundEffectPlayer;
 
     private SoundHandler() {
     }
 
     public static void initialize() {
+        try {
+            FILE_PATH = SoundHandler.class.getResource("/sounds/").toURI().toString();
+
+            // Sets the default value of the soundEffect Media (breaks if set to null)
+            soundEffect = new Media(FILE_PATH + SoundFiles.LEVEL_UP_EFFECT);
+            // Associates the Media with the MediaPlayer
+            soundEffectPlayer = new MediaPlayer(soundEffect);
+
+        } catch (URISyntaxException e) {
+            Logger.error("Could not initialize the FILE_PATH variable.");
+        }
+
         soundEffectPlayer.setVolume(DEFAULT_VOLUME_LEVEL);
     }
 
@@ -35,7 +46,7 @@ public final class SoundHandler {
     public static void playSound(SoundFiles soundFilename) {
 
         // Update the Media in the MediaPlayer to the specified audio File
-        soundEffect = new Media(new File(FILE_PATH + soundFilename.toString()).toURI().toString());
+        soundEffect = new Media(FILE_PATH + soundFilename.toString());
         soundEffectPlayer.play();
 
         // Resets the MediaPlayer so it can play another sound later after it finishes
@@ -43,8 +54,10 @@ public final class SoundHandler {
         soundEffectPlayer.setOnEndOfMedia(() -> soundEffectPlayer.stop());
     }
 
-    //TODO: Implement method that interrupts any BGM playing (vs. playing a sound effect on top of it)
-    // Will need multiple MediaPlayers, each responsible for a specific type of sound (e.g., effects, music, etc.)
+    // TODO: Implement method that interrupts any BGM playing (vs. playing a sound
+    // effect on top of it)
+    // Will need multiple MediaPlayers, each responsible for a specific type of
+    // sound (e.g., effects, music, etc.)
     public static void playSoundBGMInterrupt() {
 
     }

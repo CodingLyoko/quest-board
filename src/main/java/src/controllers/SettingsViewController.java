@@ -9,8 +9,7 @@ public class SettingsViewController extends FXMLControllerTemplate {
     @FXML
     private Slider soundEffectSlider;
 
-    @FXML
-    public void initialize() {
-        soundEffectSlider.valueProperty().addListener((_, _, newValue) -> SoundHandler.setSoundEffectVolume(newValue.doubleValue()));
+    public void onSoundEffectSliderChange() {
+        SoundHandler.setSoundEffectVolume(soundEffectSlider.getValue());
     }
 }

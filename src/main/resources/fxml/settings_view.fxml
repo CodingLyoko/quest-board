@@ -24,6 +24,6 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Slider fx:id="soundEffectSlider" blockIncrement="0.01" layoutX="64.0" layoutY="111.0" majorTickUnit="0.25" max="1.0" prefHeight="16.0" prefWidth="186.0" showTickMarks="true" value="0.75" />
+      <Slider fx:id="soundEffectSlider" blockIncrement="0.01" layoutX="64.0" layoutY="111.0" majorTickUnit="0.25" max="1.0" onMouseReleased="#onSoundEffectSliderChange" prefHeight="16.0" prefWidth="186.0" showTickMarks="true" value="0.75" />
    </children>
 </AnchorPane>

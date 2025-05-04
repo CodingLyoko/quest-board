@@ -10,6 +10,7 @@ import src.backend.ConnectH2;
 import src.handlers.FXMLHandler;
 import src.handlers.FXMLHandler.FXMLInstance;
 import src.handlers.PlayerHandler;
+import src.handlers.SoundHandler;
 import src.handlers.WindowHandler;
 import src.shared.FXMLFilenames;
 
@@ -24,6 +25,7 @@ public class App extends Application {
         PlayerHandler.getPlayerInstance();
         initFXML();
         WindowHandler.initWindows(stage);
+        SoundHandler.initialize();
 
         stage.initStyle(StageStyle.TRANSPARENT);
 
