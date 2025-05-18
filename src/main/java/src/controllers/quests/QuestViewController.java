@@ -280,13 +280,15 @@ public class QuestViewController extends FXMLControllerTemplate {
         Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
         Quest selectedQuest = getSelectedQuest();
 
-        // Removes the Quest from the associated ListView
-        questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
+        if (selectedQuest != null) {
+            // Removes the Quest from the associated ListView
+            questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
 
-        // Removes the Quest from the database
-        questController.deleteEntry(selectedQuest);
+            // Removes the Quest from the database
+            questController.deleteEntry(selectedQuest);
 
-        clearQuestDisplay();
+            clearQuestDisplay();
+        }
     }
 
     @FXML
