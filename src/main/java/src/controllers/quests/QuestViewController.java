@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
@@ -64,7 +65,7 @@ public class QuestViewController extends FXMLControllerTemplate {
     public void initialize() {
         populateTabPanes();
         populateListViews();
-        
+
         updateExpBar();
     }
 
@@ -88,13 +89,10 @@ public class QuestViewController extends FXMLControllerTemplate {
      * @param tabHeaderText - the initial text to use for the Tab
      */
     private void createQuestListTab(String tabHeaderText) {
-        // Creates a List to hold the Quests for the associated Tab
-        ObservableList<Quest> observableList = FXCollections.observableArrayList();
 
-        // Configures the ListView for the associated ObservableList
+        // Creates a ListView for the Tab (to store the Quest objects)
         ListView<Quest> listView = new ListView<>();
-        listView.getItems().setAll(observableList);
-        listView.setOnMouseClicked(_ -> questItemOnClick());
+        configureListView(listView);
 
         // Stores the ObservableList in a Map (so Quest objects can be retrieved)
         questLists.put(tabHeaderText, listView);
@@ -106,6 +104,9 @@ public class QuestViewController extends FXMLControllerTemplate {
         Text tabText = new Text();
         tabText.setWrappingWidth(80);
         tabText.setTextAlignment(TextAlignment.CENTER);
+
+        // Clear the Quest display whenever a new Tab is selected
+        tab.setOnSelectionChanged(_ -> clearQuestDisplay());
 
         // Determines what text should be displayed
         if (DueDateTimeframe.contains(tabHeaderText) == Boolean.TRUE
@@ -125,6 +126,56 @@ public class QuestViewController extends FXMLControllerTemplate {
     }
 
     /**
+     * Associates the given ListView with an ObservableList<Quest>, and sets
+     * relevant event listeners.
+     * 
+     * @param listView - ListView to be configured
+     */
+    private void configureListView(ListView<Quest> listView) {
+
+        // Creates a List to hold the Quests for the associated Tab
+        ObservableList<Quest> observableList = FXCollections.observableArrayList();
+        listView.getItems().setAll(observableList);
+
+        listView.setOnMouseClicked(_ -> questItemOnClick());
+
+        // Update the ListView to highlight overdue Quests in red
+        listView.setCellFactory(_ -> new ListCell<Quest>() {
+
+            @Override
+            protected void updateItem(Quest quest, boolean empty) {
+
+                // Call the original updateItem() function (to maintain functionality)
+                super.updateItem(quest, empty);
+
+                // If no quest is being passed to the ListView, set relevant values to NULL
+                if (empty || quest == null) {
+                    setText(null);
+                    setGraphic(null);
+                    setStyle(null);
+                } else {
+                    // Display the name of the Quest in the ListView
+                    setText(quest.getQuestName());
+
+                    // Check if this Quest has a due date
+                    if (quest.getDueDate() != null) {
+                        int daysUntilDueDate = Math
+                                .toIntExact(ChronoUnit.DAYS.between(Instant.now(), quest.getDueDate().toInstant()));
+
+                        // If the Quest is past due, highlight the ListView cell
+                        if (daysUntilDueDate < 0) {
+                            setStyle("-fx-background-color: red; -fx-text-fill: white");
+                        } else {
+                            setStyle(null);
+                        }
+                    }
+
+                }
+            }
+        });
+    }
+
+    /**
      * Quests that are due within the relevant DueDateTimeframes will be added to
      * the appropriate ListViews.
      */
@@ -137,7 +188,6 @@ public class QuestViewController extends FXMLControllerTemplate {
     }
 
     private void addQuestToListView(Quest quest) {
-
         if (quest.getTodo() == Boolean.TRUE) {
             questLists.get("TODO").getItems().add(quest);
         } else {
@@ -211,15 +261,17 @@ public class QuestViewController extends FXMLControllerTemplate {
     private void editQuest() {
         Quest questToEdit = getSelectedQuest();
 
-        ((AddQuestController) FXMLHandler.getFxmlController(FXMLFilenames.ADD_QUEST)).setQuestToSave(questToEdit);
-        WindowHandler.showPopupWindow(FXMLFilenames.ADD_QUEST);
+        if (questToEdit != null) {
+            ((AddQuestController) FXMLHandler.getFxmlController(FXMLFilenames.ADD_QUEST)).setQuestToSave(questToEdit);
+            WindowHandler.showPopupWindow(FXMLFilenames.ADD_QUEST);
 
-        // Remove Quest from ListView (if Quest is being created or edited)
-        // If the Window closed due to Cancel being pressed, do NOT remove the Quest
-        // from the ListView
-        if (AddQuestController.cancelWasClicked().equals(Boolean.FALSE)) {
-            Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
-            questLists.get(selectedTab.getId()).getItems().remove(questToEdit);
+            // Remove Quest from ListView (if Quest is being created or edited)
+            // If the Window closed due to Cancel being pressed, do NOT remove the Quest
+            // from the ListView
+            if (AddQuestController.cancelWasClicked().equals(Boolean.FALSE)) {
+                Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
+                questLists.get(selectedTab.getId()).getItems().remove(questToEdit);
+            }
         }
     }
 
