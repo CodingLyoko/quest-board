@@ -31,7 +31,7 @@ public final class SoundHandler {
             // Associates the Media with the MediaPlayer
             soundEffectPlayer = new MediaPlayer(soundEffect);
 
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException _) {
             Logger.error("Could not initialize the FILE_PATH variable.");
         }
 

@@ -149,6 +149,13 @@ public class AddQuestController extends FXMLControllerTemplate {
             quest.setExperiencePoints(Integer.parseInt(experiencePointsInput.getText()));
         }
 
+        // Due Date
+        if (dueDateInput.getValue() == null) {
+            quest.setDueDate(null);
+        } else {
+            quest.setDueDate(Timestamp.valueOf(dueDateInput.getValue().atStartOfDay()));
+        }
+
         // Occurrence Type
         if (occurrenceTypeInput.getValue() == null) {
             quest.setOccurrenceType(OccurrenceType.ONCE);
@@ -159,6 +166,8 @@ public class AddQuestController extends FXMLControllerTemplate {
         quest.setTodo(checkboxTodo.isSelected());
 
         determineQuestList(quest);
+
+
     }
 
     /**
@@ -173,18 +182,18 @@ public class AddQuestController extends FXMLControllerTemplate {
         if (quest.getTodo() == Boolean.TRUE) {
             QuestViewController.getQuestLists().get("TODO").getItems().add(quest);
         } else {
-            // If a Due Date was selected, set that value for the Quest
-            if (dueDateInput.getValue() != null) {
-                // Converts the DatePicker value to a Timestamp
-                quest.setDueDate(Timestamp.valueOf(dueDateInput.getValue().atStartOfDay()));
 
+            // If a Due Date was selected, set that value for the Quest
+            if (quest.getDueDate() != null) {
                 addQuestToListView(quest);
-            } else if (occurrenceTypeInput.getValue() != null
-                    && occurrenceTypeInput.getValue() != OccurrenceType.RECURRING) {
-                quest.setDueDate(Timestamp.from(Instant.now()));
+
+                // If no Due Date (and Occurrence Type is not RECURRING), send to the
+                // appropriate ListView based on Occurrence Type
+            } else if (quest.getOccurrenceType() != OccurrenceType.RECURRING) {
                 QuestViewController.getQuestLists().get(DueDateTimeframe.DAY.toString()).getItems().add(quest);
+
+                // If Occurrence Type is RECURRING, send to the corresponding ListView
             } else {
-                quest.setDueDate(null);
                 QuestViewController.getQuestLists().get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
             }
         }

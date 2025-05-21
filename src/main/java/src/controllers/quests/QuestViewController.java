@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
@@ -43,6 +44,8 @@ public class QuestViewController extends FXMLControllerTemplate {
     @FXML
     private TabPane questTabPane;
 
+    @FXML
+    private CheckBox todoCheckbox;
     @FXML
     private Text questNameText;
     @FXML
@@ -244,6 +247,9 @@ public class QuestViewController extends FXMLControllerTemplate {
             expText.setText("EXP: " + selectedQuest.getExperiencePoints());
 
             completeQuestButton.setVisible(true);
+
+            todoCheckbox.setSelected(selectedQuest.getTodo());
+            todoCheckbox.setVisible(true);
         }
     }
 
@@ -273,6 +279,8 @@ public class QuestViewController extends FXMLControllerTemplate {
                 questLists.get(selectedTab.getId()).getItems().remove(questToEdit);
             }
         }
+
+        clearQuestDisplay();
     }
 
     @FXML
@@ -298,6 +306,13 @@ public class QuestViewController extends FXMLControllerTemplate {
         // Grant Player experience points
         PlayerHandler.gainExp(completedQuest.getExperiencePoints());
 
+        // Keep track of TO-DO status of the Quest
+        Boolean wasTodo = completedQuest.getTodo();
+
+        // If the Quest was marked as TO-DO, un-mark it
+        completedQuest.setTodo(false);
+
+        // Check if Quest has an OccurrenceType (and it isn't Recurring)
         if (completedQuest.getOccurrenceType() != null
                 && !completedQuest.getOccurrenceType().equals(OccurrenceType.RECURRING)) {
 
@@ -311,11 +326,22 @@ public class QuestViewController extends FXMLControllerTemplate {
             if (completedQuest.getOccurrenceType().equals(OccurrenceType.ONCE)) {
                 questController.deleteEntry(completedQuest);
             } else {
-                // If the Quest was marked as To-do, un-mark it
-                completedQuest.setTodo(false);
-
                 updateDueDate(completedQuest);
             }
+            // Check if Quest was TO-DO and RECURRING
+        } else if (wasTodo == Boolean.TRUE
+                && completedQuest.getOccurrenceType().equals(OccurrenceType.RECURRING)) {
+
+            // Remove Quest from the TO-DO ListView
+            questLists.get("TODO").getItems().remove(completedQuest);
+
+            // Adds Quest back to the RECURRING ListView
+            questLists.get("RECURRING").getItems().add(completedQuest);
+
+            completedQuest.setTodo(false);
+
+            // Updates Quest DB entry to not be TO-DO
+            questController.updateEntry(completedQuest);
         }
 
         updateExpBar();
@@ -344,6 +370,7 @@ public class QuestViewController extends FXMLControllerTemplate {
     }
 
     private void clearQuestDisplay() {
+        todoCheckbox.setVisible(false);
         questNameText.setText("");
         questDescriptionTextArea.setText("");
         dueDateText.setText("");
@@ -356,6 +383,57 @@ public class QuestViewController extends FXMLControllerTemplate {
         expBar.setProgress(PlayerHandler.getProgressToNextLevel());
         expBarText.setText("EXP: " + PlayerHandler.getPlayerInstance().getExperiencePoints() + " / "
                 + PlayerHandler.getPlayerInstance().getExpToNextLevel());
+    }
+
+    /**
+     * Determines which ListView the currently selected Quest will go into when the
+     * TO-DO checkbox is toggled.
+     * 
+     * @param quest - the Quest being placed into a List
+     */
+    @FXML
+    private void todoCheckboxOnClick() {
+
+        Quest selectedQuest = getSelectedQuest();
+
+        // If TO-DO is marked, place the Quest in the TO-DO List
+        // Else, determine which List it belongs based on OccurrenceType
+        if (todoCheckbox.isSelected()) {
+
+            // Update the Quest entry
+            selectedQuest.setTodo(true);
+            questController.updateEntry(selectedQuest);
+
+            // Add the Quest to the TO-DO ListView
+            questLists.get("TODO").getItems().add(selectedQuest);
+
+            // Removes the Quest from the old ListView
+            Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
+            questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
+
+            clearQuestDisplay();
+        } else {
+            selectedQuest.setTodo(false);
+
+            // Determine which ListView to add Quest to based on Due Date and Occurrence
+            // Type
+            if (selectedQuest.getDueDate() != null) {
+                addQuestToListView(selectedQuest);
+            } else if (selectedQuest.getOccurrenceType() != null
+                    && selectedQuest.getOccurrenceType() != OccurrenceType.RECURRING) {
+                questLists.get(DueDateTimeframe.DAY.toString()).getItems().add(selectedQuest);
+            } else {
+                questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(selectedQuest);
+            }
+
+            questController.updateEntry(selectedQuest);
+
+            // Removes the Quest from the old ListView
+            Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
+            questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
+
+            clearQuestDisplay();
+        }
     }
 
     public static Map<String, ListView<Quest>> getQuestLists() {
