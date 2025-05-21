@@ -38,7 +38,7 @@ public enum DueDateTimeframe {
     public static Boolean contains(String value) {
         try {
             DueDateTimeframe.valueOf(value);
-        } catch (Exception e) {
+        } catch (Exception _) {
             return false;
         }
 

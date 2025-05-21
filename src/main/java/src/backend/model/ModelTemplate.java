@@ -242,7 +242,7 @@ public class ModelTemplate {
 
         try {
             returnValue = Enum.valueOf(enumTypes.get(fieldName), fieldValue.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException _) {
             // If no existing Enum value, return null
             returnValue = null;
         }

@@ -28,7 +28,6 @@ public class Quest extends ModelTemplate {
     private Timestamp dueDate;
     private int experiencePoints;
     private Boolean todo;
-    // private List<Object(?)> rewards;
 
     @Override
     public String toString() {
