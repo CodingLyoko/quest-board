@@ -3,6 +3,7 @@ package src.controllers.quests;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,7 +151,11 @@ public class AddQuestController extends FXMLControllerTemplate {
         }
 
         // Due Date
-        if (dueDateInput.getValue() == null) {
+        // If an Occurrence Type is set (and it isn't ONCE), the due date CANNOT be null
+        if (dueDateInput.getValue() == null && occurrenceTypeInput.getValue() != null
+                && occurrenceTypeInput.getValue() != OccurrenceType.ONCE) {
+            quest.setDueDate(Timestamp.valueOf(LocalDateTime.now().truncatedTo(ChronoUnit.DAYS)));
+        } else if (dueDateInput.getValue() == null) {
             quest.setDueDate(null);
         } else {
             quest.setDueDate(Timestamp.valueOf(dueDateInput.getValue().atStartOfDay()));
@@ -166,7 +171,6 @@ public class AddQuestController extends FXMLControllerTemplate {
         quest.setTodo(checkboxTodo.isSelected());
 
         determineQuestList(quest);
-
 
     }
 
@@ -207,8 +211,7 @@ public class AddQuestController extends FXMLControllerTemplate {
      */
     private void addQuestToListView(Quest quest) {
         // Don't want to do Due Date calculations for Quests with the RECURRING
-        // Occurrence
-        // Type (since they do not have Due Dates)
+        // Occurrence Type (since they do not have Due Dates)
         List<DueDateTimeframe> dueDateTimeframes = new ArrayList<>(Arrays.asList(DueDateTimeframe.values()));
         dueDateTimeframes.remove(DueDateTimeframe.RECURRING);
 
