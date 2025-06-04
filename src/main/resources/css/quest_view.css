@@ -32,6 +32,8 @@
 .tab {
     -fx-pref-width: 100;
     -fx-pref-height: 50;
+
+    -fx-text-base-color: transparent;
 }
 
 /*====================PROGRESS BAR====================*/

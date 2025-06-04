@@ -84,6 +84,8 @@ public class QuestViewController extends FXMLControllerTemplate {
             String timeframeString = dueDateTimeframe.toString();
             createQuestListTab(timeframeString);
         }
+
+        createQuestListTab("ONCE");
     }
 
     /**
@@ -121,6 +123,7 @@ public class QuestViewController extends FXMLControllerTemplate {
 
         // Sets the text for the Tab
         tab.setGraphic(tabText);
+        tab.setText(tabText.getText()); // Hidden; used for TabPane quick select
 
         // Associates the Tab with the relevant ListView
         tab.setContent(listView);
@@ -417,13 +420,17 @@ public class QuestViewController extends FXMLControllerTemplate {
 
             // Determine which ListView to add Quest to based on Due Date and Occurrence
             // Type
-            if (selectedQuest.getDueDate() != null) {
-                addQuestToListView(selectedQuest);
-            } else if (selectedQuest.getOccurrenceType() != null
-                    && selectedQuest.getOccurrenceType() != OccurrenceType.RECURRING) {
-                questLists.get(DueDateTimeframe.DAY.toString()).getItems().add(selectedQuest);
+            if (selectedQuest.getOccurrenceType() == OccurrenceType.ONCE) {
+                QuestViewController.getQuestLists().get("ONCE").getItems().add(selectedQuest);
             } else {
-                questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(selectedQuest);
+                if (selectedQuest.getDueDate() != null) {
+                    addQuestToListView(selectedQuest);
+                } else if (selectedQuest.getOccurrenceType() != null
+                        && selectedQuest.getOccurrenceType() != OccurrenceType.RECURRING) {
+                    questLists.get(DueDateTimeframe.DAY.toString()).getItems().add(selectedQuest);
+                } else {
+                    questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(selectedQuest);
+                }
             }
 
             questController.updateEntry(selectedQuest);

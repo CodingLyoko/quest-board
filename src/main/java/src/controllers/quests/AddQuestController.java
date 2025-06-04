@@ -182,9 +182,11 @@ public class AddQuestController extends FXMLControllerTemplate {
     private void determineQuestList(Quest quest) {
 
         // If To-do is marked, place the Quest in the To-do List
-        // Else, deermine which List it belongs based on OccurrenceType
+        // Else, determine which List it belongs based on OccurrenceType
         if (quest.getTodo() == Boolean.TRUE) {
             QuestViewController.getQuestLists().get("TODO").getItems().add(quest);
+        } else if (quest.getOccurrenceType() == OccurrenceType.ONCE) {
+            QuestViewController.getQuestLists().get("ONCE").getItems().add(quest);
         } else {
 
             // If a Due Date was selected, set that value for the Quest
