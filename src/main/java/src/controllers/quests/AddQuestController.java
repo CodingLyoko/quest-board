@@ -185,8 +185,6 @@ public class AddQuestController extends FXMLControllerTemplate {
         // Else, determine which List it belongs based on OccurrenceType
         if (quest.getTodo() == Boolean.TRUE) {
             QuestViewController.getQuestLists().get("TODO").getItems().add(quest);
-        } else if (quest.getOccurrenceType() == OccurrenceType.ONCE) {
-            QuestViewController.getQuestLists().get("ONCE").getItems().add(quest);
         } else {
 
             // If a Due Date was selected, set that value for the Quest
@@ -196,7 +194,7 @@ public class AddQuestController extends FXMLControllerTemplate {
                 // If no Due Date (and Occurrence Type is not RECURRING), send to the
                 // appropriate ListView based on Occurrence Type
             } else if (quest.getOccurrenceType() != OccurrenceType.RECURRING) {
-                QuestViewController.getQuestLists().get(DueDateTimeframe.DAY.toString()).getItems().add(quest);
+                QuestViewController.getQuestLists().get(quest.getOccurrenceType().toString().toUpperCase()).getItems().add(quest);
 
                 // If Occurrence Type is RECURRING, send to the corresponding ListView
             } else {

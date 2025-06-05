@@ -6,7 +6,6 @@ public enum DueDateTimeframe {
     MONTH(31),
     YEAR(365),
     RECURRING(100000); // Arbitrarily chosen values
-    //ONCE(100001);
 
     private final int dueDateValue;
 

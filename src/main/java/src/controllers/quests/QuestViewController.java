@@ -216,6 +216,8 @@ public class QuestViewController extends FXMLControllerTemplate {
                         break;
                     }
                 }
+            } else if (quest.getOccurrenceType().equals(OccurrenceType.ONCE)) {
+                questLists.get("ONCE").getItems().add(quest);
             } else {
                 questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
             }
@@ -432,15 +434,15 @@ public class QuestViewController extends FXMLControllerTemplate {
                     questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(selectedQuest);
                 }
             }
-
-            questController.updateEntry(selectedQuest);
-
-            // Removes the Quest from the old ListView
-            Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
-            questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
-
-            clearQuestDisplay();
         }
+
+        questController.updateEntry(selectedQuest);
+
+        // Removes the Quest from the old ListView
+        Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
+        questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
+
+        clearQuestDisplay();
     }
 
     public static Map<String, ListView<Quest>> getQuestLists() {
