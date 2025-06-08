@@ -23,4 +23,13 @@ public class ConnectH2 {
             statement.execute(sql);
         }
     }
+
+    public static void updateDatabase() throws SQLException {
+        String sql = "RUNSCRIPT FROM 'update.sql'";
+
+        try (Connection connection = DriverManager.getConnection(JDBC_URL);
+                Statement statement = connection.createStatement();) {
+            statement.execute(sql);
+        }
+    }
 }

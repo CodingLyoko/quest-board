@@ -362,8 +362,18 @@ public class QuestViewController extends FXMLControllerTemplate {
      * @param quest - Quest object that needs a new Due Date
      */
     private void updateDueDate(Quest quest) {
-        LocalDate oldDueDate = LocalDate.from(quest.getDueDate().toLocalDateTime());
-        LocalDate newDueDate = oldDueDate.plusDays(quest.getOccurrenceType().toInt());
+
+        LocalDate newDueDate;
+
+        // Determine which date to use when calculating the new Due Date
+        // Strict Due Dates use the previous Due Date value
+        // Non-strict Due Dates use the current date
+        if (quest.getStrictDueDate().equals(Boolean.TRUE)) {
+            LocalDate oldDueDate = LocalDate.from(quest.getDueDate().toLocalDateTime());
+            newDueDate = oldDueDate.plusDays(quest.getOccurrenceType().toInt());
+        } else {
+            newDueDate = LocalDate.now().plusDays(quest.getOccurrenceType().toInt());
+        }
 
         quest.setDueDate(Timestamp.valueOf(newDueDate.atStartOfDay()));
 

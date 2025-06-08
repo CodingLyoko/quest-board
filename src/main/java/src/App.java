@@ -22,6 +22,9 @@ public class App extends Application {
         // Uncomment when a new DB needs to be generated
         //ConnectH2.initDatabase();
 
+        // Updatse an existing DB
+        ConnectH2.updateDatabase();
+
         PlayerHandler.getPlayerInstance();
         initFXML();
         WindowHandler.initWindows(stage);

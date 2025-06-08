@@ -51,7 +51,7 @@ public class AddQuestController extends FXMLControllerTemplate {
     private DatePicker dueDateInput;
 
     @FXML
-    private CheckBox checkboxTodo;
+    private CheckBox strictCheckbox;
 
     @FXML
     public void initialize() {
@@ -164,11 +164,14 @@ public class AddQuestController extends FXMLControllerTemplate {
         // Occurrence Type
         if (occurrenceTypeInput.getValue() == null) {
             quest.setOccurrenceType(OccurrenceType.ONCE);
+        } else if (occurrenceTypeInput.getValue() == OccurrenceType.RECURRING) {
+            quest.setOccurrenceType(occurrenceTypeInput.getValue());
+            quest.setDueDate(null); // Recurring Quest do NOT have Due Dates
         } else {
             quest.setOccurrenceType(occurrenceTypeInput.getValue());
         }
 
-        quest.setTodo(checkboxTodo.isSelected());
+        quest.setStrictDueDate(strictCheckbox.isSelected());
 
         determineQuestList(quest);
 
@@ -181,25 +184,19 @@ public class AddQuestController extends FXMLControllerTemplate {
      */
     private void determineQuestList(Quest quest) {
 
-        // If To-do is marked, place the Quest in the To-do List
-        // Else, determine which List it belongs based on OccurrenceType
-        if (quest.getTodo() == Boolean.TRUE) {
-            QuestViewController.getQuestLists().get("TODO").getItems().add(quest);
+        // If a Due Date was selected, set that value for the Quest
+        if (quest.getDueDate() != null) {
+            addQuestToListView(quest);
+
+            // If no Due Date (and Occurrence Type is not RECURRING), send to the
+            // appropriate ListView based on Occurrence Type
+        } else if (quest.getOccurrenceType() != OccurrenceType.RECURRING) {
+            QuestViewController.getQuestLists().get(quest.getOccurrenceType().toString().toUpperCase()).getItems()
+                    .add(quest);
+
+            // If Occurrence Type is RECURRING, send to the corresponding ListView
         } else {
-
-            // If a Due Date was selected, set that value for the Quest
-            if (quest.getDueDate() != null) {
-                addQuestToListView(quest);
-
-                // If no Due Date (and Occurrence Type is not RECURRING), send to the
-                // appropriate ListView based on Occurrence Type
-            } else if (quest.getOccurrenceType() != OccurrenceType.RECURRING) {
-                QuestViewController.getQuestLists().get(quest.getOccurrenceType().toString().toUpperCase()).getItems().add(quest);
-
-                // If Occurrence Type is RECURRING, send to the corresponding ListView
-            } else {
-                QuestViewController.getQuestLists().get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
-            }
+            QuestViewController.getQuestLists().get(DueDateTimeframe.RECURRING.toString()).getItems().add(quest);
         }
     }
 
@@ -239,7 +236,7 @@ public class AddQuestController extends FXMLControllerTemplate {
         experiencePointsInput.setText("");
         occurrenceTypeInput.valueProperty().set(null);
         dueDateInput.valueProperty().set(null);
-        checkboxTodo.setSelected(false);
+        strictCheckbox.setSelected(false);
     }
 
     /**
@@ -262,7 +259,7 @@ public class AddQuestController extends FXMLControllerTemplate {
             dueDateInput.valueProperty().set(LocalDate.from(quest.getDueDate().toLocalDateTime()));
         }
 
-        checkboxTodo.setSelected(quest.getTodo());
+        strictCheckbox.setSelected(quest.getStrictDueDate());
     }
 
     public static Boolean cancelWasClicked() {

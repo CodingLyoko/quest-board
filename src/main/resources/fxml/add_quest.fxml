@@ -4,15 +4,17 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="880.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controllers.quests.AddQuestController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="510.0" prefWidth="880.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/24" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.controllers.quests.AddQuestController">
    <children>
       <ImageView fitHeight="498.0" fitWidth="860.0" layoutX="8.0" layoutY="7.0" pickOnBounds="true">
          <image>
@@ -51,11 +53,14 @@
       <ComboBox fx:id="occurrenceTypeInput" layoutX="363.0" layoutY="325.0" onAction="#occurrenceTypeOnChange" prefHeight="26.0" prefWidth="162.0" />
       <TextArea fx:id="questDescriptionInput" layoutX="94.0" layoutY="143.0" prefHeight="122.0" prefWidth="697.0" wrapText="true" />
       <DatePicker fx:id="dueDateInput" layoutX="363.0" layoutY="375.0" prefHeight="26.0" prefWidth="162.0" />
-      <Text layoutX="629.0" layoutY="347.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TODO?">
+      <CheckBox fx:id="strictCheckbox" layoutX="565.0" layoutY="380.0" mnemonicParsing="false" />
+      <Label layoutX="545.0" layoutY="352.0" text="Strict?">
          <font>
-            <Font size="24.0" />
+            <Font name="System Bold" size="18.0" />
          </font>
-      </Text>
-      <CheckBox fx:id="checkboxTodo" layoutX="659.0" layoutY="366.0" mnemonicParsing="false" />
+         <tooltip>
+            <Tooltip text="If enabled, a completed re-occurring Quest will update it's next due date based on the previous due date. If disabled, the current date will be used to calculate the next due date." />
+         </tooltip>
+      </Label>
    </children>
 </AnchorPane>
