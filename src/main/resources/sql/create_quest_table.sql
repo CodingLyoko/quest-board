@@ -1,5 +1,4 @@
-DROP TABLE IF EXISTS quest;
-CREATE TABLE quest (
+CREATE TABLE IF NOT EXISTS quest (
     id UUID PRIMARY KEY,
     quest_name VARCHAR(64),
     quest_description VARCHAR(8096),

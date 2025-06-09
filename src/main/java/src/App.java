@@ -1,6 +1,7 @@
 package src;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 import javafx.application.Application;
@@ -17,13 +18,10 @@ import src.shared.FXMLFilenames;
 public class App extends Application {
 
     @Override
-    public void start(Stage stage) throws IOException, SQLException {
+    public void start(Stage stage) throws SQLException, IOException, URISyntaxException {
 
-        // Uncomment when a new DB needs to be generated
-        //ConnectH2.initDatabase();
-
-        // Updatse an existing DB
-        ConnectH2.updateDatabase();
+        // Create/Update the Database
+        ConnectH2.executeSqlScripts();
 
         PlayerHandler.getPlayerInstance();
         initFXML();
