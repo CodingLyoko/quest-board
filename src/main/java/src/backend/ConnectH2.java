@@ -1,9 +1,11 @@
 package src.backend;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,31 +20,31 @@ public class ConnectH2 {
     private ConnectH2() {
     }
 
-    public static void executeSqlScripts() throws SQLException, IOException {
+    public static void executeSqlScripts() throws SQLException, IOException, URISyntaxException {
 
-        // Get a file containing the names of the SQL scripts
-        InputStream sqlScriptsStream = ConnectH2.class.getResourceAsStream("/sql/sql_scripts.txt");
-        BufferedReader sqlScriptsReader = new BufferedReader(new InputStreamReader(sqlScriptsStream));
+        // Get the filenames for each SQL script
+        File sqlDirectory = new File(ConnectH2.class.getResource("/sql").toURI());
+        File[] listOfSqlFiles = sqlDirectory.listFiles();
 
         // Attempt to connect to the database
         try (Connection connection = DriverManager.getConnection(JDBC_URL);
                 Statement statement = connection.createStatement();) {
 
-            // Instantiate variables to read each of the SQL scripts
-            String sqlScriptFilepath = sqlScriptsReader.readLine();
-            InputStream sqlScriptStream;
-            BufferedReader sqlScriptReader;
+            // Holds the content of the current SQL script
             StringBuilder sqlScriptContents = new StringBuilder();
 
-            // Loop through each SQL script file
-            while (sqlScriptFilepath != null) {
+            // Begin getting the contents of each SQL script
+            for (File sqlScript : listOfSqlFiles) {
+
+                // Gets the filepath for the current SQL script
+                String sqlScriptFilepath = "/sql/" + sqlScript.getName();
 
                 // Empties the StringBuilder so it can read a fresh SQL script
                 sqlScriptContents.setLength(0);
 
-                // Instantiate variables to read the individual SQL script contents
-                sqlScriptStream = ConnectH2.class.getResourceAsStream(sqlScriptFilepath);
-                sqlScriptReader = new BufferedReader(new InputStreamReader(sqlScriptStream));
+                // Instantiate variables to read each of the SQL scripts
+                InputStream sqlScriptStream = ConnectH2.class.getResourceAsStream(sqlScriptFilepath);
+                BufferedReader sqlScriptReader = new BufferedReader(new InputStreamReader(sqlScriptStream));
 
                 String lineToRead;
                 do {
@@ -60,18 +62,12 @@ public class ConnectH2 {
                 // Add the contents of the SQL file to the SQL statement
                 statement.addBatch(sqlScriptContents.toString());
 
-                // Get the filepath to the next SQL script
-                sqlScriptFilepath = sqlScriptsReader.readLine();
-
                 sqlScriptStream.close();
                 sqlScriptReader.close();
             }
 
             // Execute the content of all the SQL scripts
             statement.executeBatch();
-
-            sqlScriptsStream.close();
-            sqlScriptsReader.close();
         }
     }
 }
