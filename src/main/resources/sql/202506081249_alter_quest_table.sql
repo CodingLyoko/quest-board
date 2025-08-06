@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS quest ADD IF NOT EXISTS strict_due_date BOOLEAN DEFAULT false;
