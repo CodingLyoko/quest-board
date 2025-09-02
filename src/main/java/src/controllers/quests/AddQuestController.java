@@ -184,8 +184,13 @@ public class AddQuestController extends FXMLControllerTemplate {
      */
     private void determineQuestList(Quest quest) {
 
-        // If a Due Date was selected, set that value for the Quest
-        if (quest.getDueDate() != null) {
+        // If the Quest is set as TO-DO, add it to the TO-DO ListView
+        if (quest.getTodo().equals(Boolean.TRUE)) {
+            // Add the Quest to the TO-DO ListView
+            QuestViewController.getQuestLists().get("TODO").getItems().add(quest);
+
+            // If a Due Date was selected, set that value for the Quest
+        } else if (quest.getDueDate() != null) {
             addQuestToListView(quest);
 
             // If no Due Date (and Occurrence Type is not RECURRING), send to the
