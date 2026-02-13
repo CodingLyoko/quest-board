@@ -29,7 +29,7 @@ public final class PlayerHandler {
         if (playerInstance.getExperiencePoints() >= playerInstance.getExpToNextLevel()) {
             playerInstance.setExperiencePoints(playerInstance.getExperiencePoints() % playerInstance.getExpToNextLevel());
 
-            SoundHandler.playSound(SoundFiles.LEVEL_UP_EFFECT);
+            //SoundHandler.playSound(SoundFiles.LEVEL_UP_EFFECT);
             WindowHandler.showPopupWindow(FXMLFilenames.LEVEL_UP_POPUP);
         }
 

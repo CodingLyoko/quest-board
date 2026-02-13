@@ -191,11 +191,17 @@ public class QuestViewController extends FXMLControllerTemplate {
             addQuestToListView(quest);
         }
 
+        // Check if there are any Quests marked as TO-DO
+        if (questLists.get("TODO").getItems().isEmpty()) {
+
+            // If no quests marked as TO-DO, then remove this Tab
+            questTabPane.getTabs().remove(0);
+        }
+
     }
 
     private void addQuestToListView(Quest quest) {
         if (quest.getTodo() == Boolean.TRUE) {
-            questLists.get("TODO").getItems().add(quest);
         } else {
 
             // Don't want to do Due Date calculations for Quests with the RECURRING
@@ -349,6 +355,14 @@ public class QuestViewController extends FXMLControllerTemplate {
             questController.updateEntry(completedQuest);
         }
 
+        // If the Quest was removed from the TO-DO Tab, check if there are still Quets
+        // in that ListView
+        if (wasTodo.equals(Boolean.TRUE) && questLists.get("TODO").getItems().isEmpty()) {
+
+            // If no quests marked as TO-DO, then remove this Tab
+            questTabPane.getTabs().remove(0);
+        }
+
         updateExpBar();
 
         clearQuestDisplay();
@@ -411,6 +425,10 @@ public class QuestViewController extends FXMLControllerTemplate {
 
         Quest selectedQuest = getSelectedQuest();
 
+        // Removes the Quest from the old ListView
+        Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
+        questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
+
         // If TO-DO is marked, place the Quest in the TO-DO List
         // Else, determine which List it belongs based on OccurrenceType
         if (todoCheckbox.isSelected()) {
@@ -419,12 +437,38 @@ public class QuestViewController extends FXMLControllerTemplate {
             selectedQuest.setTodo(true);
             questController.updateEntry(selectedQuest);
 
+            // If the TO-DO Tab is not present, add it
+            if (!questTabPane.getTabs().get(0).getText().equals("TODO")) {
+                Tab tab = new Tab();
+                tab.setId("TODO");
+
+                // Configures the text for the Tab
+                Text tabText = new Text();
+                tabText.setWrappingWidth(80);
+                tabText.setTextAlignment(TextAlignment.CENTER);
+
+                // Clear the Quest display whenever a new Tab is selected
+                tab.setOnSelectionChanged(_ -> clearQuestDisplay());
+
+                tabText.setText("TODO");
+
+                // Sets the text for the Tab
+                tab.setGraphic(tabText);
+                tab.setText(tabText.getText()); // Hidden; used for TabPane quick select
+
+                // Associates the Tab with the relevant ListView
+                tab.setContent(questLists.get("TODO"));
+
+                // Adds the TO-DO Tab to the front of the Tab list
+                questTabPane.getTabs().addFirst(tab);
+            }
+
             // Add the Quest to the TO-DO ListView
             questLists.get("TODO").getItems().add(selectedQuest);
 
             // Removes the Quest from the old ListView
-            Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
-            questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
+            // Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
+            // questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
 
             clearQuestDisplay();
         } else {
@@ -444,13 +488,16 @@ public class QuestViewController extends FXMLControllerTemplate {
                     questLists.get(DueDateTimeframe.RECURRING.toString()).getItems().add(selectedQuest);
                 }
             }
+
+            // Check if there are any Quests marked as TO-DO
+            if (questLists.get("TODO").getItems().isEmpty()) {
+
+                // If no quests marked as TO-DO, then remove this Tab
+                questTabPane.getTabs().remove(0);
+            }
         }
 
         questController.updateEntry(selectedQuest);
-
-        // Removes the Quest from the old ListView
-        Tab selectedTab = questTabPane.getSelectionModel().getSelectedItem();
-        questLists.get(selectedTab.getId()).getItems().remove(selectedQuest);
 
         clearQuestDisplay();
     }
